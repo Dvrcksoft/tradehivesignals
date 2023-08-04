@@ -567,8 +567,8 @@ function Form({ id, signal, market, dbPath }: IProps) {
       </Box>
 
       <div className='mb-5'>
-        <Textarea label='Analysis' placeholder='Analysis' minRows={4} maxLength={140} className='mt-4' {...form.getInputProps('analysisText')} />
-        <Textarea label='Comment' placeholder='Result' minRows={4} maxLength={140} className='mt-4' {...form.getInputProps('comment')} />
+        <Textarea label='Analysis' placeholder='Analysis' minRows={4} maxLength={2500} className='mt-4' {...form.getInputProps('analysisText')} />
+        <Textarea label='Comment' placeholder='Result' minRows={4} maxLength={2500} className='mt-4' {...form.getInputProps('comment')} />
       </div>
 
       <div className='mb-20 md:flex gap-x-5'>

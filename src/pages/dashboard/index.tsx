@@ -45,6 +45,7 @@ export default function DashboardPage() {
               <DashboardCard title='Users:' value={dashboard.totalUsers} icon='mdi:users-group' />
               <DashboardCard title='Posts:' value={dashboard.totalPosts} icon='material-symbols:local-post-office-outline' />
               <DashboardCard title='Analytics:' value={dashboard.totalAnals} icon='material-symbols:local-post-office-outline' />
+              <DashboardCard title='Strategy:' value={dashboard.totalStrategy} icon='material-symbols:local-post-office-outline' />
 
               <DashboardCard title='Announcements:' value={dashboard.totalAnnouncements} icon='tabler:info-square-rounded' />
               <DashboardCard title='Videos:' value={dashboard.totalVideoLessons} icon='bxs:videos' />

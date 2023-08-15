@@ -5,6 +5,7 @@ import { AuthUserModel } from '../models/model.authuser';
 import { NotificationModel } from '../models/model.notification';
 import { PostModel } from '../models/model.post';
 import { AnalModel } from '../models/model.anal';
+import { StrategModel } from '../models/model.strateg';
 import { SignalModel } from '../models/model.signal';
 import { VideoLessonModel } from '../models/model.video_lesson';
 import { authClient, firestoreClient } from '../_firebase/firebase_client';
@@ -39,6 +40,7 @@ type State = {
   authUsers: AuthUserModel[];
   posts: PostModel[];
   anals: AnalModel[];
+  strategy: StrategModel[];
   videoLessons: VideoLessonModel[];
   subscriptions: any;
 
@@ -60,6 +62,7 @@ type State = {
   streamAuthUsers: () => void;
   streamPostsSubscription: () => void;
   streamAnalsSubscription: () => void;
+  streamStrategySubscription: () => void;
   streamVideoLessonsSubscription: () => void;
   streamSymbolAggr: () => void;
 
@@ -70,6 +73,9 @@ type State = {
 
   isHandleAnalSubmitCalled: boolean;
   setIsHandleAnalSubmitCalled: (isHandleAnalSubmitCalled: boolean) => void;
+
+  isHandleStrategSubmitCalled: boolean;
+  setIsHandleStrategSubmitCalled: (isHandleStrategSubmitCalled: boolean) => void;
 
   isHandleTermsSubmitCalled: boolean;
   setIsHandleTermsSubmitCalled: (isHandleTermsSubmitCalled: boolean) => void;
@@ -101,17 +107,20 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
   authUsers: [],
   posts: [],
   anals: [],
+  strategy: [],
   videoLessons: [],
 
   symbolAggr: SymbolsAggr.fromJson({}),
 
   isHandlePostSubmitCalled: false,
   isHandleAnalSubmitCalled: false,
+  isHandleStrategSubmitCalled: false,
   isHandleTermsSubmitCalled: false,
   isHandlePrivacySubmitCalled: false,
 
   setIsHandlePostSubmitCalled: (isHandlePostSubmitCalled: boolean) => set({ isHandlePostSubmitCalled }),
   setIsHandleAnalSubmitCalled: (isHandleAnalSubmitCalled: boolean) => set({ isHandleAnalSubmitCalled }),
+  setIsHandleStrategSubmitCalled: (isHandleStrategSubmitCalled: boolean) => set({ isHandleStrategSubmitCalled }),
   setIsHandleTermsSubmitCalled: (isHandleTermsSubmitCalled: boolean) => set({ isHandleTermsSubmitCalled }),
   setIsHandlePrivacySubmitCalled: (isHandlePrivacySubmitCalled: boolean) => set({ isHandlePrivacySubmitCalled }),
 
@@ -360,6 +369,30 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
     });
   },
 
+  streamStrategySubscription: () => {
+    const q = query(collection(firestoreClient, 'strategy'), orderBy('timestampCreated', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const x = querySnapshot.docs.map((doc) => {
+        return StrategModel.fromJson({
+          ...doc.data(),
+          id: doc.id,
+          timestampCreated: convertToDate(doc.data()!.timestampCreated),
+          timestampUpdated: convertToDate(doc.data()!.timestampUpdated),
+          strategDate: convertToDate(doc.data()!.strategDate),
+          strategDateTime: convertToDate(doc.data()!.strategDateTime)
+        });
+      });
+
+      set((state) => {
+        return { ...state, strategy: x };
+      });
+    });
+
+    set((state) => {
+      return { ...state, subscriptions: { ...state.subscriptions, strategy: unsubscribe } };
+    });
+  },
+
   streamAuthUsers: () => {
     const q = query(collection(firestoreClient, 'users'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -403,6 +436,7 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
           get().streamAuthUsers();
           get().streamPostsSubscription();
           get().streamAnalsSubscription();
+          get().streamStrategySubscription();
           get().streamVideoLessonsSubscription();
           get().streamSymbolAggr();
         }

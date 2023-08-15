@@ -44,6 +44,8 @@ export default function DashboardPage() {
             <div className='grid grid-cols-1 mt-0 md:grid-cols-4 gap-x-3 gap-y-3'>
               <DashboardCard title='Users:' value={dashboard.totalUsers} icon='mdi:users-group' />
               <DashboardCard title='Posts:' value={dashboard.totalPosts} icon='material-symbols:local-post-office-outline' />
+              <DashboardCard title='Analytics:' value={dashboard.totalAnals} icon='material-symbols:local-post-office-outline' />
+
               <DashboardCard title='Announcements:' value={dashboard.totalAnnouncements} icon='tabler:info-square-rounded' />
               <DashboardCard title='Videos:' value={dashboard.totalVideoLessons} icon='bxs:videos' />
             </div>

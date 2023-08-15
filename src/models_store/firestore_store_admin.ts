@@ -4,6 +4,7 @@ import { AnnouncementModel } from '../models/model.announcement';
 import { AuthUserModel } from '../models/model.authuser';
 import { NotificationModel } from '../models/model.notification';
 import { PostModel } from '../models/model.post';
+import { AnalModel } from '../models/model.anal';
 import { SignalModel } from '../models/model.signal';
 import { VideoLessonModel } from '../models/model.video_lesson';
 import { authClient, firestoreClient } from '../_firebase/firebase_client';
@@ -37,6 +38,7 @@ type State = {
   notifications: NotificationModel[];
   authUsers: AuthUserModel[];
   posts: PostModel[];
+  anals: AnalModel[];
   videoLessons: VideoLessonModel[];
   subscriptions: any;
 
@@ -57,6 +59,7 @@ type State = {
   streamNotifications: () => void;
   streamAuthUsers: () => void;
   streamPostsSubscription: () => void;
+  streamAnalsSubscription: () => void;
   streamVideoLessonsSubscription: () => void;
   streamSymbolAggr: () => void;
 
@@ -64,6 +67,9 @@ type State = {
 
   isHandlePostSubmitCalled: boolean;
   setIsHandlePostSubmitCalled: (isHandlePostSubmitCalled: boolean) => void;
+
+  isHandleAnalSubmitCalled: boolean;
+  setIsHandleAnalSubmitCalled: (isHandleAnalSubmitCalled: boolean) => void;
 
   isHandleTermsSubmitCalled: boolean;
   setIsHandleTermsSubmitCalled: (isHandleTermsSubmitCalled: boolean) => void;
@@ -94,15 +100,18 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
   notifications: [],
   authUsers: [],
   posts: [],
+  anals: [],
   videoLessons: [],
 
   symbolAggr: SymbolsAggr.fromJson({}),
 
   isHandlePostSubmitCalled: false,
+  isHandleAnalSubmitCalled: false,
   isHandleTermsSubmitCalled: false,
   isHandlePrivacySubmitCalled: false,
 
   setIsHandlePostSubmitCalled: (isHandlePostSubmitCalled: boolean) => set({ isHandlePostSubmitCalled }),
+  setIsHandleAnalSubmitCalled: (isHandleAnalSubmitCalled: boolean) => set({ isHandleAnalSubmitCalled }),
   setIsHandleTermsSubmitCalled: (isHandleTermsSubmitCalled: boolean) => set({ isHandleTermsSubmitCalled }),
   setIsHandlePrivacySubmitCalled: (isHandlePrivacySubmitCalled: boolean) => set({ isHandlePrivacySubmitCalled }),
 
@@ -327,6 +336,30 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
     });
   },
 
+  streamAnalsSubscription: () => {
+    const q = query(collection(firestoreClient, 'anals'), orderBy('timestampCreated', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const x = querySnapshot.docs.map((doc) => {
+        return AnalModel.fromJson({
+          ...doc.data(),
+          id: doc.id,
+          timestampCreated: convertToDate(doc.data()!.timestampCreated),
+          timestampUpdated: convertToDate(doc.data()!.timestampUpdated),
+          analDate: convertToDate(doc.data()!.analDate),
+          analDateTime: convertToDate(doc.data()!.analDateTime)
+        });
+      });
+
+      set((state) => {
+        return { ...state, anals: x };
+      });
+    });
+
+    set((state) => {
+      return { ...state, subscriptions: { ...state.subscriptions, anals: unsubscribe } };
+    });
+  },
+
   streamAuthUsers: () => {
     const q = query(collection(firestoreClient, 'users'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -369,6 +402,7 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
           get().streamNotifications();
           get().streamAuthUsers();
           get().streamPostsSubscription();
+          get().streamAnalsSubscription();
           get().streamVideoLessonsSubscription();
           get().streamSymbolAggr();
         }

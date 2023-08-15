@@ -49,6 +49,7 @@ export function NavbarAdmin({ isOpen }: Props) {
         <NavbarLink link='/announcements' title='Announcements' iconifyData='mdi:announcement-outline' />
         <NavbarLink link='/video-lessons' title='Video Lessons' iconifyData='material-symbols:video-call' />
         <NavbarLink link='/posts' title='Posts' iconifyData='jam:blogger-square' />
+        <NavbarLink link='/anals' title='Analytics' iconifyData='jam:blogger-square' />
 
         <Divider className='my-3 border-gray-200 dark:border-[#373A40]' />
 

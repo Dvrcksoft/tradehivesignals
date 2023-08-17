@@ -52,6 +52,10 @@ export async function apiGetDashboardAggregation(): Promise<DashboardModel> {
     const sratsSnapshot = await getCountFromServer(collSrats);
     const totalSrats = sratsSnapshot.data().count;
 
+    const collLessns = query(collection(firestoreClient, 'lessns'));
+    const lessnsSnapshot = await getCountFromServer(collLessns);
+    const totalLessns = lessnsSnapshot.data().count;
+
 
     return DashboardModel.fromJson({
       totalUsers,
@@ -65,7 +69,8 @@ export async function apiGetDashboardAggregation(): Promise<DashboardModel> {
       totalSignalsCryptoClosed,
       totalPosts,
       totalAnals,
-      totalSrats
+      totalSrats,
+      totalLessns
     });
   } catch (error) {
     return DashboardModel.fromJson({});

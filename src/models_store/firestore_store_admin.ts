@@ -6,6 +6,7 @@ import { NotificationModel } from '../models/model.notification';
 import { PostModel } from '../models/model.post';
 import { AnalModel } from '../models/model.anal';
 import { SratModel } from '../models/model.srat';
+import { LessnModel } from '../models/model.lessn';
 import { SignalModel } from '../models/model.signal';
 import { VideoLessonModel } from '../models/model.video_lesson';
 import { authClient, firestoreClient } from '../_firebase/firebase_client';
@@ -41,6 +42,7 @@ type State = {
   posts: PostModel[];
   anals: AnalModel[];
   srats: SratModel[];
+  lessns: LessnModel[];
   videoLessons: VideoLessonModel[];
   subscriptions: any;
 
@@ -63,6 +65,7 @@ type State = {
   streamPostsSubscription: () => void;
   streamAnalsSubscription: () => void;
   streamSratsSubscription: () => void;
+  streamLessnsSubscription: () => void;
   streamVideoLessonsSubscription: () => void;
   streamSymbolAggr: () => void;
 
@@ -76,6 +79,10 @@ type State = {
 
   isHandleSratSubmitCalled: boolean;
   setIsHandleSratSubmitCalled: (isHandleSratSubmitCalled: boolean) => void;
+
+  isHandleLessnSubmitCalled: boolean;
+  setIsHandleLessnSubmitCalled: (isHandleLessnSubmitCalled: boolean) => void;
+
 
   isHandleTermsSubmitCalled: boolean;
   setIsHandleTermsSubmitCalled: (isHandleTermsSubmitCalled: boolean) => void;
@@ -108,6 +115,7 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
   posts: [],
   anals: [],
   srats: [],
+  lessns: [],
   videoLessons: [],
 
   symbolAggr: SymbolsAggr.fromJson({}),
@@ -115,12 +123,14 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
   isHandlePostSubmitCalled: false,
   isHandleAnalSubmitCalled: false,
   isHandleSratSubmitCalled: false,
+  isHandleLessnSubmitCalled: false,
   isHandleTermsSubmitCalled: false,
   isHandlePrivacySubmitCalled: false,
 
   setIsHandlePostSubmitCalled: (isHandlePostSubmitCalled: boolean) => set({ isHandlePostSubmitCalled }),
   setIsHandleAnalSubmitCalled: (isHandleAnalSubmitCalled: boolean) => set({ isHandleAnalSubmitCalled }),
   setIsHandleSratSubmitCalled: (isHandleSratSubmitCalled: boolean) => set({ isHandleSratSubmitCalled }),
+  setIsHandleLessnSubmitCalled: (isHandleLessnSubmitCalled: boolean) => set({ isHandleLessnSubmitCalled }),
   setIsHandleTermsSubmitCalled: (isHandleTermsSubmitCalled: boolean) => set({ isHandleTermsSubmitCalled }),
   setIsHandlePrivacySubmitCalled: (isHandlePrivacySubmitCalled: boolean) => set({ isHandlePrivacySubmitCalled }),
 
@@ -393,6 +403,30 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
     });
   },
 
+  streamLessnsSubscription: () => {
+    const q = query(collection(firestoreClient, 'lessns'), orderBy('timestampCreated', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const x = querySnapshot.docs.map((doc) => {
+        return LessnModel.fromJson({
+          ...doc.data(),
+          id: doc.id,
+          timestampCreated: convertToDate(doc.data()!.timestampCreated),
+          timestampUpdated: convertToDate(doc.data()!.timestampUpdated),
+          lessnDate: convertToDate(doc.data()!.lessnDate),
+          lessnDateTime: convertToDate(doc.data()!.lessnDateTime)
+        });
+      });
+
+      set((state) => {
+        return { ...state, lessns: x };
+      });
+    });
+
+    set((state) => {
+      return { ...state, subscriptions: { ...state.subscriptions, lessns: unsubscribe } };
+    });
+  },
+
   streamAuthUsers: () => {
     const q = query(collection(firestoreClient, 'users'));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -437,6 +471,7 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
           get().streamPostsSubscription();
           get().streamAnalsSubscription();
           get().streamSratsSubscription();
+          get().streamLessnsSubscription();
           get().streamVideoLessonsSubscription();
           get().streamSymbolAggr();
         }

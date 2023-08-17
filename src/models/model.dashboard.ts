@@ -15,7 +15,7 @@ export class DashboardModel {
   @Expose() totalSignalsCryptoClosed: number = 0;
   @Expose() totalPosts: number = 0;
   @Expose() totalAnals: number = 0;
-  @Expose() totalStrategy: number = 0;
+  @Expose() totalSrats: number = 0;
 
   static fromJson(json: any): DashboardModel {
     return plainToInstance(DashboardModel, json, { exposeDefaultValues: true, excludeExtraneousValues: true });

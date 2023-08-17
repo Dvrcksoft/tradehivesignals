@@ -2,7 +2,7 @@ import { Expose, instanceToPlain, plainToInstance, Type } from 'class-transforme
 import 'reflect-metadata';
 import { convertToDate } from '../utils/convert_to_date';
 
-export class StrategModel {
+export class SratModel {
   @Expose({ name: 'id' }) id: string = '';
   @Expose() slug: string = '';
   @Expose() title: string = '';
@@ -11,18 +11,18 @@ export class StrategModel {
   @Expose() image: string = '';
   @Expose() isFree: boolean = true;
 
-  @Expose() @Type(() => Date) strategDate?: Date | null = null;
-  @Expose() @Type(() => Date) strategTime?: Date | null = null;
-  @Expose() @Type(() => Date) strategDateTime?: Date | null = null;
+  @Expose() @Type(() => Date) sratDate?: Date | null = null;
+  @Expose() @Type(() => Date) sratTime?: Date | null = null;
+  @Expose() @Type(() => Date) sratDateTime?: Date | null = null;
   @Expose() @Type(() => Date) timestampCreated?: Date | null = null;
   @Expose() @Type(() => Date) timestampUpdated?: Date | null = null;
 
-  static fromJson(json: any): StrategModel {
+  static fromJson(json: any): SratModel {
     json = convertObjectDate(json);
-    return plainToInstance(StrategModel, json, { exposeDefaultValues: true, excludeExtraneousValues: true });
+    return plainToInstance(SratModel, json, { exposeDefaultValues: true, excludeExtraneousValues: true });
   }
 
-  static toJson(order: StrategModel): any {
+  static toJson(order: SratModel): any {
     return instanceToPlain(order);
   }
 }
@@ -30,9 +30,9 @@ export class StrategModel {
 function convertObjectDate(json: any) {
   json.timestampCreated = convertToDate(json.timestampCreated) || new Date();
   json.timestampUpdated = convertToDate(json.timestampUpdated) || new Date();
-  json.strategDate = convertToDate(json.strategDate) || new Date();
-  json.strategTime = convertToDate(json.strategTime) || new Date();
-  json.strategDateTime = convertToDate(json.strategDateTime) || new Date();
+  json.sratDate = convertToDate(json.sratDate) || new Date();
+  json.sratTime = convertToDate(json.sratTime) || new Date();
+  json.sratDateTime = convertToDate(json.sratDateTime) || new Date();
 
   return json;
 }

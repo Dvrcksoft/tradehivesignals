@@ -10,12 +10,12 @@ import Page from '../../components/others/Page';
 import { BaseTable } from '../../components/tables/BaseTable';
 import AuthGuard from '../../guards/AuthGuard';
 import Layout from '../../layouts';
-import { StrategModel } from '../../models/model.strateg';
-import { apiDeleteStrateg } from '../../models_services/firestore_strateg_service';
+import { SratModel } from '../../models/model.srat';
+import { apiDeleteSrat } from '../../models_services/firestore_srat_service';
 import { useFirestoreStoreAdmin } from '../../models_store/firestore_store_admin';
 import { fDate, fDateTime } from '../../utils/format_time';
 
-const columnHelper = createColumnHelper<StrategModel>();
+const columnHelper = createColumnHelper<SratModel>();
 
 const columns = [
   columnHelper.accessor('title', {
@@ -43,15 +43,15 @@ const columns = [
     header: 'Action',
     cell: (info) => (
       <Box className='flex items-center justify-center '>
-        <TableActions strateg={info.row.original} />
+        <TableActions srat={info.row.original} />
       </Box>
     ),
     size: 0
   })
 ];
 
-export default function StrategPage() {
-  const { strategy } = useFirestoreStoreAdmin((state) => state);
+export default function SratPage() {
+  const { srats } = useFirestoreStoreAdmin((state) => state);
   const router = useRouter();
 
   return (
@@ -62,14 +62,14 @@ export default function StrategPage() {
             <div className='flex justify-between'>
               <Text className='text-2xl font-semibold leading-10 cursor-pointer'>Strategy</Text>
 
-              <Link href={'/strategy/new'}>
+              <Link href={'/srats/new'}>
                 <Button className='btn-app'>New Strategy</Button>
               </Link>
             </div>
 
             <div className='mt-14' />
 
-            <BaseTable data={strategy} columns={columns} />
+            <BaseTable data={srats} columns={columns} />
           </Container>
         </Page>
       </Layout>
@@ -77,21 +77,21 @@ export default function StrategPage() {
   );
 }
 
-function TableActions({ strateg }: { strateg: StrategModel }) {
+function TableActions({ srat }: { srat: SratModel }) {
   const router = useRouter();
   const modals = useModals();
 
-  const handleSubLifetime = async (modalId: string, strateg: StrategModel) => {
+  const handleSubLifetime = async (modalId: string, srat: SratModel) => {
     modals.closeModal(modalId);
     try {
-      await apiDeleteStrateg(strateg.id);
+      await apiDeleteSrat(srat.id);
       showNotification({ title: 'Success', message: 'strategy deleted', autoClose: 6000 });
     } catch (error) {
       showNotification({ color: 'red', title: 'Error', message: 'Error deleting strategy', autoClose: 6000 });
     }
   };
 
-  const deletestrateg = () => {
+  const deletesrat = () => {
     const modalId = modals.openModal({
       title: 'Are you sure you want to proceed?',
       centered: true,
@@ -103,7 +103,7 @@ function TableActions({ strateg }: { strateg: StrategModel }) {
               No don't do it
             </Button>
 
-            <Button className=' w-min btn-delete mx' fullWidth onClick={() => handleSubLifetime(modalId, strateg)} mt='md'>
+            <Button className=' w-min btn-delete mx' fullWidth onClick={() => handleSubLifetime(modalId, srat)} mt='md'>
               Delete
             </Button>
           </Box>
@@ -114,11 +114,11 @@ function TableActions({ strateg }: { strateg: StrategModel }) {
 
   return (
     <>
-      <Link href={`/strategy/${strateg.id}`}>
+      <Link href={`/srats/${srat.id}`}>
         <Iconify className='bg-slate-100 dark:bg-slate-700 rounded-full p-2 w-[30px] h-[30px]' icon={'akar-icons:edit'} />
       </Link>
 
-      <Box className='flex' onClick={deletestrateg}>
+      <Box className='flex' onClick={deletesrat}>
         <Iconify
           className='bg-red-200 rounded-full p-2 w-[30px] h-[30px] ml-2 text-red-500 cursor-pointer'
           icon={'fluent:delete-12-filled'}

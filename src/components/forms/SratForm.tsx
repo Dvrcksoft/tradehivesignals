@@ -8,10 +8,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import * as Yup from 'yup';
-import { StrategModel } from '../../models/model.strateg';
+import { SratModel } from '../../models/model.srat';
 
 import { getFirebaseStorageDownloadUrl } from '../../models_services/firebase_image_service';
-import { apiCreateStrateg, apiGetStrateg, apiUpdateStrateg } from '../../models_services/firestore_strateg_service';
+import { apiCreateSrat, apiGetSrat, apiUpdateSrat } from '../../models_services/firestore_srat_service';
 import { useFirestoreStoreAdmin } from '../../models_store/firestore_store_admin';
 
 import { RichTextEditor } from '../rte/RichTextEditor';
@@ -20,15 +20,15 @@ import FormSkelenton from './_FormSkelenton';
 
 interface IProps {
   id?: string;
-  strateg: StrategModel | null;
+  srat: SratModel | null;
 }
 
-export default function StrategForm({ id }: { id?: string }) {
+export default function SratForm({ id }: { id?: string }) {
   const [isInitLoading, setIsInitLoading] = useState(id != null ? true : false);
-  const [strateg, setTag] = useState<StrategModel | null>(null);
+  const [srat, setTag] = useState<SratModel | null>(null);
 
   async function getInitData() {
-    if (id) setTag(await apiGetStrateg(id));
+    if (id) setTag(await apiGetSrat(id));
     setIsInitLoading(false);
   }
 
@@ -37,19 +37,19 @@ export default function StrategForm({ id }: { id?: string }) {
   }, []);
 
   if (isInitLoading) return <FormSkelenton />;
-  if (!strateg && id) return <FormError />;
+  if (!srat && id) return <FormError />;
 
-  return <Form id={id} strateg={strateg} />;
+  return <Form id={id} srat={srat} />;
 }
 
-function Form({ id, strateg }: IProps) {
+function Form({ id, srat }: IProps) {
   const schema = Yup.object({
     title: Yup.string().required('Required'),
     body: Yup.string(),
     status: Yup.string().required('Required'),
     slug: Yup.string().required('Required'),
     image: Yup.string(),
-    strategDate: Yup.date().required('Required'),
+    sratDate: Yup.date().required('Required'),
     isFree: Yup.string().required('Required')
   });
 
@@ -57,13 +57,13 @@ function Form({ id, strateg }: IProps) {
     validate: yupResolver(schema),
 
     initialValues: {
-      title: strateg?.title || '',
-      body: strateg?.body || '',
-      status: strateg?.status || 'Draft',
-      slug: strateg?.slug || '',
-      image: strateg?.image || '',
-      strategDate: strateg?.strategDate || new Date(),
-      isFree: strateg?.isFree == false ? 'No' : 'Yes'
+      title: srat?.title || '',
+      body: srat?.body || '',
+      status: srat?.status || 'Draft',
+      slug: srat?.slug || '',
+      image: srat?.image || '',
+      sratDate: srat?.sratDate || new Date(),
+      isFree: srat?.isFree == false ? 'No' : 'Yes'
     }
   });
 
@@ -71,8 +71,8 @@ function Form({ id, strateg }: IProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<CustomFile | null>(null);
   const [value, setValue] = useState('');
-  const { isHandleStrategSubmitCalled } = useFirestoreStoreAdmin((state) => state);
-  const { setIsHandleStrategSubmitCalled } = useFirestoreStoreAdmin((state) => state);
+  const { isHandleSratSubmitCalled } = useFirestoreStoreAdmin((state) => state);
+  const { setIsHandleSratSubmitCalled } = useFirestoreStoreAdmin((state) => state);
 
   function generateSlugUrlSafe() {
     // const slug = form.values.title.toLowerCase().replace(/ /g, '-');
@@ -86,27 +86,27 @@ function Form({ id, strateg }: IProps) {
   }
 
   useEffect(() => {
-    if (isHandleStrategSubmitCalled) {
+    if (isHandleSratSubmitCalled) {
       handleSubmit();
     }
-  }, [isHandleStrategSubmitCalled]);
+  }, [isHandleSratSubmitCalled]);
 
   const handleSubmit = async () => {
     console.log(form.values);
     console.log(form.errors);
     if (form.validate().hasErrors) {
-      setIsHandleStrategSubmitCalled(false);
+      setIsHandleSratSubmitCalled(false);
       return;
     }
 
     try {
       setIsLoading(true);
-      const x = new StrategModel();
+      const x = new SratModel();
       x.title = form.values.title;
       x.slug = form.values.slug.replace(/-+$/, '');
       x.body = form.values.body;
       x.status = form.values.status;
-      x.strategDate = form.values.strategDate;
+      x.sratDate = form.values.sratDate;
       x.image = form.values.image;
       x.status = form.values.status;
       x.isFree = form.values.isFree == 'Yes' ? true : false;
@@ -116,18 +116,18 @@ function Form({ id, strateg }: IProps) {
         form.values.image = x.image;
       }
 
-      if (!strateg) await apiCreateStrateg(x);
-      if (strateg && id) await apiUpdateStrateg(id, x);
+      if (!srat) await apiCreateSrat(x);
+      if (srat && id) await apiUpdateSrat(id, x);
 
       setFile(null);
-      setIsHandleStrategSubmitCalled(false);
+      setIsHandleSratSubmitCalled(false);
 
       if (!id) form.reset();
-      if (!id) router.push('/strategy');
+      if (!id) router.push('/srats');
 
       showNotification({ color: 'blue', title: 'Success', message: 'Strategy created', autoClose: 6000 });
     } catch (error: any) {
-      setIsHandleStrategSubmitCalled(false);
+      setIsHandleSratSubmitCalled(false);
       showNotification({
         color: 'red',
         title: 'Error',
@@ -214,7 +214,7 @@ function Form({ id, strateg }: IProps) {
             {...form.getInputProps('status')}
           />
 
-          <DatePicker className='col-span-1' label='Publish date' maxDate={new Date()} {...form.getInputProps('strategDate')} />
+          <DatePicker className='col-span-1' label='Publish date' maxDate={new Date()} {...form.getInputProps('sratDate')} />
         </div>
 
         <div className='flex items-center'>

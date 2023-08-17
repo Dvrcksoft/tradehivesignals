@@ -1,18 +1,18 @@
 import { limit, query, serverTimestamp, setDoc, updateDoc, where } from 'firebase/firestore';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
-import { StrategModel } from '../models/model.strateg';
+import { SratModel } from '../models/model.srat';
 import { authClient, firestoreClient } from '../_firebase/firebase_client';
 import { apiGetUser } from './firestore_user_service';
 
-export async function apiCreateStrateg(x: StrategModel): Promise<boolean> {
+export async function apiCreateSrat(x: SratModel): Promise<boolean> {
   try {
     const fbUser = authClient.currentUser;
     const user = await apiGetUser(fbUser!.uid);
     if (!user) throw new Error('No user found!');
     if (!user.isSuperAdmin && !user.isAdmin) throw new Error('You are not authorized to update links settings.');
 
-    const qName = query(collection(firestoreClient, 'strategy'), where('name', '==', x.title));
-    const qSlug = query(collection(firestoreClient, 'strategy'), where('slug', '==', x.slug));
+    const qName = query(collection(firestoreClient, 'srats'), where('name', '==', x.title));
+    const qSlug = query(collection(firestoreClient, 'srats'), where('slug', '==', x.slug));
 
     const qNameSnapshot = await getDocs(qName);
     const qSlugSnapshot = await getDocs(qSlug);
@@ -21,13 +21,13 @@ export async function apiCreateStrateg(x: StrategModel): Promise<boolean> {
       throw new Error('Strategy name or slug already exists');
     }
 
-    await addDoc(collection(firestoreClient, 'strategy'), {
-      ...StrategModel.toJson(x),
+    await addDoc(collection(firestoreClient, 'srats'), {
+      ...SratModel.toJson(x),
       timestampCreated: serverTimestamp(),
       timestampUpdated: serverTimestamp()
     });
 
-    await apiAggregateStrategy();
+    await apiAggregateSrats();
 
     return true;
   } catch (error: any) {
@@ -35,17 +35,17 @@ export async function apiCreateStrateg(x: StrategModel): Promise<boolean> {
   }
 }
 
-export async function apiUpdateStrateg(id: string, x: StrategModel): Promise<boolean> {
-  let strateg = { ...StrategModel.toJson(x), timestampUpdated: serverTimestamp() };
-  delete strateg.timestampCreated;
+export async function apiUpdateSrat(id: string, x: SratModel): Promise<boolean> {
+  let srat = { ...SratModel.toJson(x), timestampUpdated: serverTimestamp() };
+  delete srat.timestampCreated;
   try {
     const fbUser = authClient.currentUser;
     const user = await apiGetUser(fbUser!.uid);
     if (!user) throw new Error('No user found!');
     if (!user.isSuperAdmin && !user.isAdmin) throw new Error('You are not authorized to update links settings.');
 
-    await updateDoc(doc(firestoreClient, 'strategy', id), { ...strateg });
-    await apiAggregateStrategy();
+    await updateDoc(doc(firestoreClient, 'srats', id), { ...srat });
+    await apiAggregateSrats();
 
     return true;
   } catch (error: any) {
@@ -53,39 +53,39 @@ export async function apiUpdateStrateg(id: string, x: StrategModel): Promise<boo
   }
 }
 
-export async function apiGetStrateg(id: string): Promise<StrategModel | null> {
+export async function apiGetSrat(id: string): Promise<SratModel | null> {
   try {
-    const strateg = await getDoc(doc(firestoreClient, 'strategy', id));
-    if (!strateg.data()) return null;
-    return StrategModel.fromJson({
-      ...strateg.data(),
-      id: strateg.id
+    const srat = await getDoc(doc(firestoreClient, 'srat', id));
+    if (!srat.data()) return null;
+    return SratModel.fromJson({
+      ...srat.data(),
+      id: srat.id
     });
   } catch (error: any) {
     throw new Error(error.message);
   }
 }
 
-export async function apiGetStrategy() {
+export async function apiGetSrats() {
   try {
-    const strategy = await getDocs(query(collection(firestoreClient, 'strategy'), where('status', '==', 'Published'), limit(50)));
-    return strategy.docs.map((videoLesson) => {
-      return StrategModel.fromJson({ ...videoLesson.data(), id: videoLesson.id });
+    const srats = await getDocs(query(collection(firestoreClient, 'srats'), where('status', '==', 'Published'), limit(50)));
+    return srats.docs.map((videoLesson) => {
+      return SratModel.fromJson({ ...videoLesson.data(), id: videoLesson.id });
     });
   } catch (error: any) {
     throw new Error(error.message);
   }
 }
 
-export async function apiDeleteStrateg(id: string): Promise<boolean> {
+export async function apiDeleteSrat(id: string): Promise<boolean> {
   try {
     const fbUser = authClient.currentUser;
     const user = await apiGetUser(fbUser!.uid);
     if (!user) throw new Error('No user found!');
     if (!user.isSuperAdmin && !user.isAdmin) throw new Error('You are not authorized to update links settings.');
 
-    await deleteDoc(doc(firestoreClient, 'strategy', id));
-    await apiAggregateStrategy();
+    await deleteDoc(doc(firestoreClient, 'srats', id));
+    await apiAggregateSrats();
 
     return true;
   } catch (error: any) {
@@ -94,15 +94,15 @@ export async function apiDeleteStrateg(id: string): Promise<boolean> {
   }
 }
 
-export async function apiAggregateStrategy(): Promise<boolean> {
+export async function apiAggregateSrats(): Promise<boolean> {
   try {
-    const signals = await apiGetStrategy();
+    const signals = await apiGetSrats();
 
     const data = signals.map((signal) => {
-      return StrategModel.toJson(signal);
+      return SratModel.toJson(signal);
     });
 
-    await setDoc(doc(firestoreClient, 'strategyAggr', 'strategy'), { data, timestampUpdated: serverTimestamp() });
+    await setDoc(doc(firestoreClient, 'sratsAggr', 'srats'), { data, timestampUpdated: serverTimestamp() });
 
     return true;
   } catch (error: any) {

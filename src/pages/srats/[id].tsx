@@ -2,7 +2,7 @@ import { Box, Button, Container, Text } from '@mantine/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ReactElement } from 'react';
-import StrategForm from '../../components/forms/StrategForm';
+import SratForm from '../../components/forms/SratForm';
 import Iconify from '../../components/others/Iconify';
 import Page from '../../components/others/Page';
 import AuthGuard from '../../guards/AuthGuard';
@@ -13,7 +13,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const id = router.query.id as string;
 
-  const { setIsHandleStrategSubmitCalled, isHandleStrategSubmitCalled } = useFirestoreStoreAdmin((state) => state);
+  const { setIsHandleSratSubmitCalled, isHandleSratSubmitCalled } = useFirestoreStoreAdmin((state) => state);
 
   return (
     <AuthGuard>
@@ -22,7 +22,7 @@ export default function DashboardPage() {
           <Container size={'xl'} className='mt-3'>
             <div className='flex justify-between'>
               <Box className='flex items-center'>
-                <Link href={'/strategy'}>
+                <Link href={'/srats'}>
                   <Text className='text-2xl font-semibold leading-10 cursor-pointer'>Strategy</Text>
                 </Link>
                 <Iconify icon={'dashicons:arrow-right-alt2'} className='mx-2' />
@@ -30,7 +30,7 @@ export default function DashboardPage() {
               </Box>
 
               <div>
-                <Button loading={isHandleStrategSubmitCalled} className='btn-app' onClick={() => setIsHandleStrategSubmitCalled(true)}>
+                <Button loading={isHandleSratSubmitCalled} className='btn-app' onClick={() => setIsHandleSratSubmitCalled(true)}>
                   Submit
                 </Button>
               </div>
@@ -38,7 +38,7 @@ export default function DashboardPage() {
 
             <div className='mt-10' />
 
-            <StrategForm id={id} />
+            <SratForm id={id} />
           </Container>
         </Page>
       </Layout>

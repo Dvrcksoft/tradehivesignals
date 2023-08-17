@@ -13,10 +13,10 @@ export default function DashboardPage() {
   return (
     <AuthGuard>
       <Layout variant='admin'>
-        <Page title='New Strategy'>
+        <Page title='New Lesson'>
           <Container size={'xl'} className='mt-3'>
             <div className='flex justify-between'>
-              <Text className='text-2xl font-semibold leading-10 cursor-pointer'>Strategy</Text>
+              <Text className='text-2xl font-semibold leading-10 cursor-pointer'>Lessons</Text>
               <div>
                 <Button loading={isHandleLessnSubmitCalled} className='btn-app' onClick={() => setIsHandleLessnSubmitCalled(true)}>
                   Submit

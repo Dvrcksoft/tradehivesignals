@@ -57,13 +57,13 @@ export default function LessnPage() {
   return (
     <AuthGuard>
       <Layout variant='admin'>
-        <Page title='Strategy'>
+        <Page title=''>
           <Container className='max-w-[1600px] mt-3'>
             <div className='flex justify-between'>
-              <Text className='text-2xl font-semibold leading-10 cursor-pointer'>Strategy</Text>
+              <Text className='text-2xl font-semibold leading-10 cursor-pointer'>Lessons</Text>
 
               <Link href={'/lessns/new'}>
-                <Button className='btn-app'>New Strategy</Button>
+                <Button className='btn-app'>New Lesson</Button>
               </Link>
             </div>
 

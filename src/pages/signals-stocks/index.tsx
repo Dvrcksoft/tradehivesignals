@@ -96,7 +96,7 @@ export default function SignalsIndexPage() {
   return (
     <AuthGuard>
       <Layout variant='admin'>
-        <Page title='TradeHive'>
+        <Page title='Signally'>
           <Container size='xl' className=''>
             <Box className='flex items-center justify-between mt-2 mb-5 text-center'>
               <Text className='text-2xl font-semibold leading-10 cursor-pointer'>{isClosed == 'true' ? 'Closed' : 'Open'} stock signals</Text>

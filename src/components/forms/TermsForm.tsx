@@ -12,9 +12,9 @@ import { apiGetTerms, apiUpdateTerms } from '../../models_services/firestore_ter
 import { useFirestoreStoreAdmin } from '../../models_store/firestore_store_admin';
 
 import { FramerFadeIn } from '../framer_motion/FramerFadeIn';
-import { RichTextEditor } from '../rte/RichTextEditor';
 import { FormError } from './_FormError';
 import FormSkelenton from './_FormSkelenton';
+import { RichTextEditorTipTap } from '../rte/RichTextEditor';
 
 interface IProps {
   id?: string;
@@ -92,7 +92,7 @@ function Form({ terms }: IProps) {
 
   return (
     <Container size={'xl'} p={0}>
-      <RichTextEditor value={form.values.data} onChange={(v: any) => form.setValues({ ...form.values, data: v })} className='' id='rte' />
+      <RichTextEditorTipTap value={form.values.data} onChange={(v: any) => form.setValues({ ...form.values, data: v })} className='' id='rte' />
       <div className='pb-20' />
     </Container>
   );

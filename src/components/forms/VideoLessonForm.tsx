@@ -61,7 +61,6 @@ function Form({ id, videoLesson }: IProps) {
     validate: yupResolver(schema),
     initialValues: {
       title: videoLesson?.title ?? '',
-      type: videoLesson?.type ?? '',
       link: videoLesson?.link ?? '',
       image: videoLesson?.image ?? '',
       isFree: videoLesson?.isFree == false ? 'No' : 'Yes',
@@ -76,7 +75,6 @@ function Form({ id, videoLesson }: IProps) {
       setIsLoading(true);
       const s = new VideoLessonModel();
       s.title = form.values.title;
-      s.type = form.values.type;
       s.link = form.values.link;
       s.timestampCreated = videoLesson?.timestampCreated ?? new Date();
       s.image = videoLesson?.image ?? '';

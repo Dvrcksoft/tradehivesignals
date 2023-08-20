@@ -6,7 +6,6 @@ export class VideoLessonModel {
   @Expose({ name: 'id' }) id: string = '';
   @Expose() link: string = '';
   @Expose() title: string = '';
-  @Expose() type: string = '';
   @Expose() image: string = '';
   @Expose() status: string = '';
   @Expose() isFree: boolean = true;

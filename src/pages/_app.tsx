@@ -1,6 +1,6 @@
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
-import { NotificationsProvider } from '@mantine/notifications';
+
 import { getCookie, setCookie } from 'cookies-next';
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { AppProps } from 'next/app';
@@ -12,6 +12,7 @@ import '../../src/assets/styles/global-app.scss';
 
 import { useFirestoreStoreAdmin } from '../models_store/firestore_store_admin';
 import { initializeFirebaseClient } from '../_firebase/firebase_client';
+import { Notifications } from '@mantine/notifications';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -59,21 +60,30 @@ export default function App(props: MyAppProps & { colorScheme: ColorScheme }) {
   return (
     <>
       <Head>
-        <title>TradeHive</title>
+        <title>Signally</title>
         <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width' />
         <link rel='shortcut icon' href='/favicon.svg' />
       </Head>
 
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <ModalsProvider labels={{ confirm: 'Submit', cancel: 'Cancel' }}>
-          <MantineProvider theme={{ colorScheme, fontSizes: { xs: 14 } }} withGlobalStyles withNormalizeCSS withCSSVariables>
-            <NotificationsProvider>
-              <MotionLazyContainer>
-                {/*  */}
-                {getLayout(<Component {...pageProps} />)}
-                {/*  */}
-              </MotionLazyContainer>
-            </NotificationsProvider>
+          <MantineProvider
+            theme={{
+              fontFamily: 'Nunito,Inter, sans-serif',
+              fontFamilyMonospace: 'Nunito ,Inter, Monaco, Courier, monospace',
+              headings: { fontFamily: 'Nunito,Inter, Greycliff CF, sans-serif' },
+              colorScheme
+            }}
+            withGlobalStyles
+            withNormalizeCSS
+            withCSSVariables
+          >
+            <Notifications />
+            <MotionLazyContainer>
+              {/*  */}
+              {getLayout(<Component {...pageProps} />)}
+              {/*  */}
+            </MotionLazyContainer>
           </MantineProvider>
         </ModalsProvider>
       </ColorSchemeProvider>

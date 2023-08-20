@@ -1,5 +1,5 @@
 import { Box, Button, NativeSelect, Text, Textarea, TextInput } from '@mantine/core';
-import { DatePicker, TimeInput } from '@mantine/dates';
+import { DateInput, DateTimePicker, TimeInput } from '@mantine/dates';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
 import { useRouter } from 'next/router';
@@ -77,8 +77,7 @@ function Form({ id, signal, market, dbPath }: IProps) {
     analysisText: Yup.string(),
     //
     entryPrice: Yup.number().required('Required'),
-    entryDate: Yup.date().required('Required'),
-    entryTime: Yup.date().required('Required'),
+    entryDateTime: Yup.date().required('Required'),
     //
     stopLoss: Yup.number().required('Required'),
     stopLossPips: Yup.string().nullable(),
@@ -89,20 +88,17 @@ function Form({ id, signal, market, dbPath }: IProps) {
     takeProfit1: Yup.number().required('Required'),
     takeProfit1Pips: Yup.string().nullable(),
     takeProfit1Hit: Yup.string().required('Required'),
-    takeProfit1Date: Yup.date().nullable(),
-    takeProfit1Time: Yup.date().nullable(),
+    takeProfit1DateTime: Yup.date().nullable(),
     //
     takeProfit2: isAuto == 'true' ? Yup.string().nullable().required('Required') : Yup.string().nullable(),
     takeProfit2Pips: Yup.string().nullable(),
     takeProfit2Hit: Yup.string().required('Required'),
-    takeProfit2Date: Yup.date().nullable(),
-    takeProfit2Time: Yup.date().nullable(),
+    takeProfit2DateTime: Yup.date().nullable(),
     //
     takeProfit3: isAuto == 'true' ? Yup.string().nullable().required('Required') : Yup.string().nullable(),
     takeProfit3Pips: Yup.string().nullable(),
     takeProfit3Hit: Yup.string().required('Required'),
-    takeProfit3Date: Yup.date().nullable(),
-    takeProfit3Time: Yup.date().nullable()
+    takeProfit3DateTime: Yup.date().nullable()
     //
   });
   const form = useForm({
@@ -115,8 +111,7 @@ function Form({ id, signal, market, dbPath }: IProps) {
       analysisText: signal?.analysisText ?? '',
 
       entryPrice: signal?.entryPrice ?? '',
-      entryDate: signal?.getEntryDate ?? new Date(),
-      entryTime: signal?.getEntryTime ?? new Date(),
+      entryDateTime: signal?.entryDateTime ?? new Date(),
       isFree: getStringFromBool(signal?.isFree ?? false),
 
       stopLoss: signal?.stopLoss ?? '',
@@ -128,20 +123,19 @@ function Form({ id, signal, market, dbPath }: IProps) {
       takeProfit1: signal?.takeProfit1 == 0 ? '' : signal?.takeProfit1 ?? '',
       takeProfit1Pips: signal?.takeProfit1Pips ?? '',
       takeProfit1Hit: getStringFromBool(signal?.takeProfit1Hit ?? false),
-      takeProfit1Date: signal?.getTakeProfit1Date ?? null,
-      takeProfit1Time: signal?.getTakeProfit1Time ?? null,
+      takeProfit1DateTime: signal?.takeProfit1DateTime ?? null,
 
       takeProfit2: signal?.takeProfit2 == 0 ? '' : signal?.takeProfit2 ?? '',
       takeProfit2Pips: signal?.takeProfit2Pips ?? '',
       takeProfit2Hit: getStringFromBool(signal?.takeProfit2Hit ?? false),
       takeProfit2Date: signal?.getTakeProfit2Date ?? null,
-      takeProfit2Time: signal?.getTakeProfit2Time ?? null,
+      takeProfit2DateTime: signal?.takeProfit2DateTime ?? null,
 
       takeProfit3: signal?.takeProfit3 == 0 ? '' : signal?.takeProfit3 ?? '',
       takeProfit3Pips: signal?.takeProfit3Pips ?? '',
       takeProfit3Hit: getStringFromBool(signal?.takeProfit3Hit ?? false),
       takeProfit3Date: signal?.getTakeProfit3Date ?? null,
-      takeProfit3Time: signal?.getTakeProfit3Time ?? null
+      takeProfit3DateTime: signal?.takeProfit3DateTime ?? null
     }
   });
 
@@ -176,7 +170,7 @@ function Form({ id, signal, market, dbPath }: IProps) {
       s.analysisText = form.values.analysisText;
       //
       s.entryPrice = Number(form.values.entryPrice);
-      s.entryDateTime = combineDateAndTime(form.values.entryDate, form.values.entryTime);
+      s.entryDateTime = form.values.entryDateTime;
       s.isFree = getBoolFromString(form.values.isFree);
 
       s.stopLoss = Number(form.values.stopLoss);
@@ -189,19 +183,19 @@ function Form({ id, signal, market, dbPath }: IProps) {
       s.takeProfit1Pct = calculateSignalPct(s.entryPrice, s.takeProfit1);
       s.takeProfit1Pips = calculateSignalPips(s.entryPrice, s.takeProfit1, s.symbol);
       s.takeProfit1Hit = getBoolFromString(form.values.takeProfit1Hit);
-      s.takeProfit1DateTime = combineDateAndTime(form.values.takeProfit1Date, form.values.takeProfit1Time);
+      s.takeProfit1DateTime = form.values.takeProfit1DateTime;
 
       s.takeProfit2 = Number(form.values.takeProfit2);
       s.takeProfit2Pct = calculateSignalPct(s.entryPrice, s.takeProfit2);
       s.takeProfit2Pips = calculateSignalPips(s.entryPrice, s.takeProfit2, s.symbol);
       s.takeProfit2Hit = getBoolFromString(form.values.takeProfit2Hit);
-      s.takeProfit2DateTime = combineDateAndTime(form.values.takeProfit2Date, form.values.takeProfit2Time);
+      s.takeProfit2DateTime = form.values.takeProfit2DateTime;
 
       s.takeProfit3 = Number(form.values.takeProfit3);
       s.takeProfit3Pct = calculateSignalPct(s.entryPrice, s.takeProfit3);
       s.takeProfit3Pips = calculateSignalPips(s.entryPrice, s.takeProfit3, s.symbol);
       s.takeProfit3Hit = getBoolFromString(form.values.takeProfit3Hit);
-      s.takeProfit3DateTime = combineDateAndTime(form.values.takeProfit3Date, form.values.takeProfit3Time);
+      s.takeProfit3DateTime = form.values.takeProfit3DateTime;
 
       s.timestampCreated = signal?.timestampCreated ?? new Date();
       s.timestampUpdated = new Date();
@@ -369,12 +363,18 @@ function Form({ id, signal, market, dbPath }: IProps) {
           type={'number'}
           disabled={currentSignalIsAuto}
         />
-        <DatePicker label='Entry day' className='w-full' {...form.getInputProps('entryDate')} disabled={currentSignalIsAuto} />
-        <TimeInput label='Entry time' className='w-full' format='12' {...form.getInputProps('entryTime')} disabled={currentSignalIsAuto} />
+        <DateTimePicker
+          valueFormat='DD MMM YYYY hh:mm A'
+          label='Entry date and time'
+          placeholder='Entry date and time'
+          className='w-full'
+          {...form.getInputProps('entryDateTime')}
+          disabled={currentSignalIsAuto}
+        />
       </div>
 
       {/* stop loss */}
-      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-5 gap-x-3'>
+      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-4 gap-x-3'>
         <TextInput
           label='Stop loss'
           placeholder='Stop loss'
@@ -393,15 +393,14 @@ function Form({ id, signal, market, dbPath }: IProps) {
           disabled
         />
 
-        <DatePicker label='Stop loss day' className='w-full' {...form.getInputProps('stopLossDate')} disabled={!id || currentSignalIsAuto} />
-        <TimeInput
-          label='Stop loss time'
+        <DateTimePicker
+          valueFormat='DD MMM YYYY hh:mm A'
+          label='Stop loss day and time'
           className='w-full'
-          format='12'
-          {...form.getInputProps('stopLossTime')}
+          {...form.getInputProps('stopLossDate')}
           disabled={!id || currentSignalIsAuto}
-          clearable
         />
+
         <NativeSelect
           className='w-full'
           placeholder=''
@@ -414,7 +413,7 @@ function Form({ id, signal, market, dbPath }: IProps) {
         />
       </div>
 
-      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-5 gap-x-3'>
+      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-4 gap-x-3'>
         <TextInput
           disabled={currentSignalIsAuto}
           label='Take profit 1'
@@ -432,20 +431,15 @@ function Form({ id, signal, market, dbPath }: IProps) {
           className='w-full'
           disabled
         />
-        <DatePicker
-          label='Take profit 1 day'
+
+        <DateTimePicker
+          valueFormat='DD MMM YYYY hh:mm A'
+          label='Take profit 1 day and time'
           className='w-full'
-          {...form.getInputProps('takeProfit1Date')}
+          {...form.getInputProps('takeProfit1DateTime')}
           disabled={!id || currentSignalIsAuto}
         />
-        <TimeInput
-          label='Take profit 1 time'
-          className='w-full'
-          format='12'
-          {...form.getInputProps('takeProfit1Time')}
-          clearable
-          disabled={!id || currentSignalIsAuto}
-        />
+
         <NativeSelect
           className='w-full'
           disabled={!id || currentSignalIsAuto}
@@ -458,7 +452,7 @@ function Form({ id, signal, market, dbPath }: IProps) {
         />
       </div>
 
-      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-5 gap-x-3'>
+      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-4 gap-x-3'>
         <TextInput
           disabled={currentSignalIsAuto}
           label='Take profit 2'
@@ -478,18 +472,12 @@ function Form({ id, signal, market, dbPath }: IProps) {
           value={calculatePctPips(form.values.entryPrice, form.values.takeProfit2, form.values.symbol)}
           disabled
         />
-        <DatePicker
-          label='Take profit 2 day'
+
+        <DateTimePicker
+          valueFormat='DD MMM YYYY hh:mm A'
+          label='Take profit 2 day and time'
           className='w-full'
-          {...form.getInputProps('takeProfit2Date')}
-          disabled={!id || currentSignalIsAuto}
-        />
-        <TimeInput
-          label='Take profit 2 time'
-          className='w-full'
-          format='12'
-          {...form.getInputProps('takeProfit2Time')}
-          clearable
+          {...form.getInputProps('takeProfit2DateTime')}
           disabled={!id || currentSignalIsAuto}
         />
 
@@ -505,7 +493,7 @@ function Form({ id, signal, market, dbPath }: IProps) {
         />
       </div>
 
-      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-5 gap-x-3'>
+      <div className='grid mt-6 xs:grid-cols-2 md:grid-cols-4 gap-x-3'>
         <TextInput
           disabled={currentSignalIsAuto}
           label='Take profit 3'
@@ -524,18 +512,11 @@ function Form({ id, signal, market, dbPath }: IProps) {
           disabled
         />
 
-        <DatePicker
-          label='Take profit 3 day'
+        <DateTimePicker
+          valueFormat='DD MMM YYYY hh:mm A'
+          label='Take profit 3 day and time'
           className='w-full'
-          {...form.getInputProps('takeProfit3Date')}
-          disabled={!id || currentSignalIsAuto}
-        />
-        <TimeInput
-          label='Take profit 3 time'
-          className='w-full'
-          format='12'
-          {...form.getInputProps('takeProfit3Time')}
-          clearable
+          {...form.getInputProps('takeProfit3DateTime')}
           disabled={!id || currentSignalIsAuto}
         />
 
@@ -567,8 +548,8 @@ function Form({ id, signal, market, dbPath }: IProps) {
       </Box>
 
       <div className='mb-5'>
-        <Textarea label='Analysis' placeholder='Analysis' minRows={4} maxLength={2500} className='mt-4' {...form.getInputProps('analysisText')} />
-        <Textarea label='Comment' placeholder='Result' minRows={4} maxLength={2500} className='mt-4' {...form.getInputProps('comment')} />
+        <Textarea label='Analysis' placeholder='Analysis' minRows={4} maxLength={140} className='mt-4' {...form.getInputProps('analysisText')} />
+        <Textarea label='Comment' placeholder='Result' minRows={4} maxLength={140} className='mt-4' {...form.getInputProps('comment')} />
       </div>
 
       <div className='mb-20 md:flex gap-x-5'>

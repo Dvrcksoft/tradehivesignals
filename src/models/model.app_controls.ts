@@ -3,7 +3,7 @@ import 'reflect-metadata';
 
 export class AppControlsPublicModel {
   @Expose({ name: 'id' }) id: string = '';
-  @Expose() name: string = 'TradeHive';
+  @Expose() name: string = 'Signally';
   @Expose() adminUrl: string = '';
   @Expose() frontendUrl: string = '';
   @Expose() logoImage: string = '';

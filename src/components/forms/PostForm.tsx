@@ -1,5 +1,5 @@
 import { Box, Button, Container, NativeSelect, Text, Textarea, TextInput } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DateInput, DatePicker } from '@mantine/dates';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -14,9 +14,9 @@ import { getFirebaseStorageDownloadUrl } from '../../models_services/firebase_im
 import { apiCreatePost, apiGetPost, apiUpdatePost } from '../../models_services/firestore_post_service';
 import { useFirestoreStoreAdmin } from '../../models_store/firestore_store_admin';
 
-import { RichTextEditor } from '../rte/RichTextEditor';
 import { FormError } from './_FormError';
 import FormSkelenton from './_FormSkelenton';
+import { RichTextEditorTipTap } from '../rte/RichTextEditor';
 
 interface IProps {
   id?: string;
@@ -214,7 +214,7 @@ function Form({ id, post }: IProps) {
             {...form.getInputProps('status')}
           />
 
-          <DatePicker className='col-span-1' label='Publish date' maxDate={new Date()} {...form.getInputProps('postDate')} />
+          <DateInput className='col-span-1' label='Publish date' maxDate={new Date()} {...form.getInputProps('postDate')} />
         </div>
 
         <div className='flex items-center'>
@@ -225,7 +225,12 @@ function Form({ id, post }: IProps) {
         </div>
 
         <Textarea placeholder='Title' label='Title' radius={0} rows={2} {...form.getInputProps('title')} />
-        <RichTextEditor value={form.values.body} onChange={(v: any) => form.setValues({ ...form.values, body: v })} className='' id='rte' />
+        <RichTextEditorTipTap
+          value={form.values.body}
+          onChange={(v: any) => form.setValues({ ...form.values, body: v })}
+          className=''
+          id='rte'
+        />
 
         <div className='pb-20' />
       </div>

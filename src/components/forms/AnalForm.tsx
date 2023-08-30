@@ -214,7 +214,7 @@ function Form({ id, anal }: IProps) {
             {...form.getInputProps('status')}
           />
 
-          <DateInput className='col-span-1' label='Publish date' maxDate={new Date()} {...form.getInputProps('analDate')} />
+          <DatePicker className='col-span-1' label='Publish date' maxDate={new Date()} {...form.getInputProps('analDate')} />
         </div>
 
         <div className='flex items-center'>

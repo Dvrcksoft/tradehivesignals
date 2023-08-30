@@ -37,6 +37,10 @@ const columns = [
     header: 'Title',
     cell: (info) => info.getValue()
   }),
+  columnHelper.accessor('type', {
+    header: 'Type',
+    cell: (info) => info.getValue()
+  }),
   columnHelper.accessor('link', {
     header: 'Link',
     cell: (info) => info.getValue()

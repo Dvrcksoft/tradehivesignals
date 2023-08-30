@@ -2,6 +2,13 @@
 .mantine-InputWrapper-root {
   margin-bottom: 20px;
 }
+.mantine-UnstyledButton-root {
+}
+
+.mantine-Input-input,
+.mantine-UnstyledButton-root,
+.ql-editor {
+}
 
 .mantine-TextInput-label,
 .mantine-Textarea-label,
@@ -15,11 +22,9 @@
 .mantine-Input-input,
 .mantine-TextInput-input,
 .mantine-Textarea-input,
-.mantine-DateTimePicker-wrapper,
 .mantine-TimeField-timeInput {
   min-height: 38px;
   border-radius: 4px;
-  background-color: transparent;
 }
 
 .mantine-AmPmInput-timeInput,

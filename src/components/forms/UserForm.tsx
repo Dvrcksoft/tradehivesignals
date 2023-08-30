@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { Send } from 'tabler-icons-react';
 import * as Yup from 'yup';
 
-import { DatePicker, DateInput } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 import { AuthUserModel } from '../../models/model.authuser';
 import { getFirebaseStorageDownloadUrl } from '../../models_services/firebase_image_service';
 import { apiGetUser, apiUpdateUser } from '../../models_services/firestore_user_service';
@@ -156,8 +156,7 @@ function Form({ id, user }: IProps) {
               onDrop={handleDropFiles}
               onReject={(files) => console.log('rejected files', files)}
               maxSize={3 * 1024 ** 2}
-              accept={IMAGE_MIME_TYPE}
-            >
+              accept={IMAGE_MIME_TYPE}>
               <DropzoneChildren />
             </Dropzone>
           </Box>
@@ -178,7 +177,7 @@ function Form({ id, user }: IProps) {
             {...form.getInputProps('subIsLifetime')}
           />
 
-          <DateInput
+          <DatePicker
             className='col-span-1'
             label='Lifetime sub end date (Leave blank if the subscription never expires)'
             {...form.getInputProps('subIsLifetimeEndDate')}
@@ -193,8 +192,7 @@ function Form({ id, user }: IProps) {
               onClick={handleSubmit}
               leftIcon={<Send size={14} />}
               variant='filled'
-              className='w-full mt-10 text-black transition border-0 bg-app-yellow hover:bg-opacity-90'
-            >
+              className='w-full mt-10 text-black transition border-0 bg-app-yellow hover:bg-opacity-90'>
               Submit
             </Button>
           </Box>

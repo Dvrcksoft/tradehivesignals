@@ -18,7 +18,7 @@ export async function apiCreateLessn(x: LessnModel): Promise<boolean> {
     const qSlugSnapshot = await getDocs(qSlug);
 
     if (qNameSnapshot.size > 0 || qSlugSnapshot.size > 0) {
-      throw new Error('Lessn name or slug already exists');
+      throw new Error('Lesson name or slug already exists');
     }
 
     await addDoc(collection(firestoreClient, 'lessns'), {
@@ -55,7 +55,7 @@ export async function apiUpdateLessn(id: string, x: LessnModel): Promise<boolean
 
 export async function apiGetLessn(id: string): Promise<LessnModel | null> {
   try {
-    const lessn = await getDoc(doc(firestoreClient, 'lessns', id));
+    const lessn = await getDoc(doc(firestoreClient, 'lessn', id));
     if (!lessn.data()) return null;
     return LessnModel.fromJson({
       ...lessn.data(),

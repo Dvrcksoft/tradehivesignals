@@ -125,7 +125,7 @@ function Form({ id, anal }: IProps) {
       if (!id) form.reset();
       if (!id) router.push('/anals');
 
-      showNotification({ color: 'blue', title: 'Success', message: 'anal created', autoClose: 6000 });
+      showNotification({ color: 'blue', title: 'Success', message: 'Analytic created', autoClose: 6000 });
     } catch (error: any) {
       setIsHandleAnalSubmitCalled(false);
       showNotification({

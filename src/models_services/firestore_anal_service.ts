@@ -18,7 +18,7 @@ export async function apiCreateAnal(x: AnalModel): Promise<boolean> {
     const qSlugSnapshot = await getDocs(qSlug);
 
     if (qNameSnapshot.size > 0 || qSlugSnapshot.size > 0) {
-      throw new Error('Analytic name or slug already exists');
+      throw new Error('analytic name or slug already exists');
     }
 
     await addDoc(collection(firestoreClient, 'anals'), {

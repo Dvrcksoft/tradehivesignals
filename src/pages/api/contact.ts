@@ -14,7 +14,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       if (!smtp!.email || !smtp!.password || !smtp!.host || !smtp!.port) res.status(500).json({ message: 'Missing SMTP credentials' });
 
       let queryAppName = await firestoreAdmin.collection('appControlsPublic').doc('appInfo').get();
-      let appName = queryAppName.data()?.name || 'Signally';
+      let appName = queryAppName.data()?.name || 'TradeHive';
 
       const mailBody = `
       <div>

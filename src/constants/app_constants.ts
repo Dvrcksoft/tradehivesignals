@@ -2,7 +2,7 @@ type I_APP_MODE = 'DEV' | 'PROD';
 
 export const APP_MODE: I_APP_MODE = 'PROD';
 
-export const APP_NAME = 'Signally';
+export const APP_NAME = 'TradeHive';
 
 export const firebaseConfigClient = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

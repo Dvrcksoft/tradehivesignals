@@ -58,7 +58,7 @@ export default function SignInForm() {
   return (
     <Box className='xs:w-full sm:w-[600px] py-10 px-6 rounded-md h-screen'>
       <Box className='flex flex-col w-full mx-auto text-center'>
-        <Text className='mt-10 font-bold xs:text-xl sm:text-2xl'>Welcome to Signally</Text>
+        <Text className='mt-10 font-bold xs:text-xl sm:text-2xl'>Welcome to TradeHive</Text>
         <Text className='mt-2 font-bold xs:text-md sm:text-lg'>Please create the admin users below</Text>
       </Box>
 

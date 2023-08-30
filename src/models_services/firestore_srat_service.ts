@@ -55,7 +55,7 @@ export async function apiUpdateSrat(id: string, x: SratModel): Promise<boolean> 
 
 export async function apiGetSrat(id: string): Promise<SratModel | null> {
   try {
-    const srat = await getDoc(doc(firestoreClient, 'srats', id));
+    const srat = await getDoc(doc(firestoreClient, 'srat', id));
     if (!srat.data()) return null;
     return SratModel.fromJson({
       ...srat.data(),

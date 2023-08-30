@@ -69,7 +69,7 @@ function Form({ appInfo }: IProps) {
   const form = useForm({
     validate: yupResolver(schema),
     initialValues: {
-      name: appInfo?.name ?? 'Signally',
+      name: appInfo?.name ?? 'TradeHive',
       logoImage: appInfo?.logoImage ?? '',
       frontendUrl: appInfo?.frontendUrl ?? '',
       adminUrl: appInfo?.adminUrl ?? '',

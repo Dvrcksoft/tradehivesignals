@@ -53,7 +53,7 @@ export default function SignInForm() {
   return (
     <Box className='xs:w-full sm:w-[500px] py-10 px-6 rounded-md'>
       <Box className='flex flex-col w-full mx-auto text-center '>
-        <Text className='mt-4 text-2xl font-bold'>Signally account login</Text>
+        <Text className='mt-4 text-2xl font-bold'>TradeHive account login</Text>
       </Box>
 
       <Box className='flex flex-col items-center mt-8'>

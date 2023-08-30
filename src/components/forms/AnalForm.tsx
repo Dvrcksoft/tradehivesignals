@@ -1,5 +1,5 @@
 import { Box, Button, Container, NativeSelect, Text, Textarea, TextInput } from '@mantine/core';
-import { DateInput, DatePicker } from '@mantine/dates';
+import { DatePicker } from '@mantine/dates';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { useForm, yupResolver } from '@mantine/form';
 import { showNotification } from '@mantine/notifications';
@@ -14,9 +14,9 @@ import { getFirebaseStorageDownloadUrl } from '../../models_services/firebase_im
 import { apiCreateAnal, apiGetAnal, apiUpdateAnal } from '../../models_services/firestore_anal_service';
 import { useFirestoreStoreAdmin } from '../../models_store/firestore_store_admin';
 
+import { RichTextEditor } from '../rte/RichTextEditor';
 import { FormError } from './_FormError';
 import FormSkelenton from './_FormSkelenton';
-import { RichTextEditorTipTap } from '../rte/RichTextEditor';
 
 interface IProps {
   id?: string;
@@ -125,7 +125,7 @@ function Form({ id, anal }: IProps) {
       if (!id) form.reset();
       if (!id) router.push('/anals');
 
-      showNotification({ color: 'blue', title: 'Success', message: 'Analytic created', autoClose: 6000 });
+      showNotification({ color: 'blue', title: 'Success', message: 'anal created', autoClose: 6000 });
     } catch (error: any) {
       setIsHandleAnalSubmitCalled(false);
       showNotification({
@@ -225,12 +225,7 @@ function Form({ id, anal }: IProps) {
         </div>
 
         <Textarea placeholder='Title' label='Title' radius={0} rows={2} {...form.getInputProps('title')} />
-        <RichTextEditorTipTap
-          value={form.values.body}
-          onChange={(v: any) => form.setValues({ ...form.values, body: v })}
-          className=''
-          id='rte'
-        />
+        <RichTextEditor value={form.values.body} onChange={(v: any) => form.setValues({ ...form.values, body: v })} className='' id='rte' />
 
         <div className='pb-20' />
       </div>

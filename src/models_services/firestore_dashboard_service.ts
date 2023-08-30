@@ -16,6 +16,10 @@ export async function apiGetDashboardAggregation(): Promise<DashboardModel> {
     const announcementsSnapshot = await getCountFromServer(collAnnouncements);
     const totalAnnouncements = announcementsSnapshot.data().count;
 
+    const collPins = query(collection(firestoreClient, 'pins'));
+    const pinsSnapshot = await getCountFromServer(collPins);
+    const totalPins = pinsSnapshot.data().count;
+
     const collSignalsForexOpen = query(collection(firestoreClient, 'signalsForex'), where('isClosed', '==', false));
     const signalsForexSnapshotOpen = await getCountFromServer(collSignalsForexOpen);
     const totalSignalsForexOpen = signalsForexSnapshotOpen.data().count;
@@ -61,6 +65,7 @@ export async function apiGetDashboardAggregation(): Promise<DashboardModel> {
       totalUsers,
       totalVideoLessons,
       totalAnnouncements,
+      totalPins,
       totalSignalsForexOpen,
       totalSignalsForexClosed,
       totalSignalsStocksOpen,

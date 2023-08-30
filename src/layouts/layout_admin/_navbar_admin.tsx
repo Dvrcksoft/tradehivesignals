@@ -20,6 +20,15 @@ export function NavbarAdmin({ isOpen }: Props) {
         <NavbarLink link='/dashboard' title='Dashboard' iconifyData='ri:dashboard-3-fill' />
         <Divider className='my-3 border-gray-200 dark:border-[#373A40]' />
 
+        <NavbarLink link='/announcements' title='Announcements' iconifyData='mdi:announcement-outline' />
+        <NavbarLink link='/pins' title='Pin Messages' iconifyData='material-symbols:push-pin' />
+        <NavbarLink link='/lessns' title='Lessons' iconifyData='material-symbols:cast-for-education' />
+        <NavbarLink link='/posts' title='Posts' iconifyData='material-symbols:post-add' />
+        <NavbarLink link='/anals' title='Analytics' iconifyData='material-symbols:insights' />
+        <NavbarLink link='/srats' title='Strategy' iconifyData='material-symbols:square-foot' />
+
+        <Divider className='my-3 border-gray-200 dark:border-[#373A40]' />
+
         <NavbarLink link='/signals-crypto' title='Signals: Crypto' iconifyData='akar-icons:edit' />
         <NavbarLinkSub link='/signals-crypto?isClosed=false' title='Open' />
         <NavbarLinkSub link='/signals-crypto?isClosed=true' title='Closed' />
@@ -43,14 +52,6 @@ export function NavbarAdmin({ isOpen }: Props) {
         <NavbarLinkSub link='/users?access=admin' title='Admins' />
         <NavbarLinkSub link='/users?access=lifetime' title='Lifetime' />
         <NavbarLinkSub link='/users?access=subscriber' title='Subscibers' />
-
-        <Divider className='my-3 border-gray-200 dark:border-[#373A40]' />
-
-        <NavbarLink link='/announcements' title='Announcements' iconifyData='mdi:announcement-outline' />
-        <NavbarLink link='/lessns' title='Lessons' iconifyData='material-symbols:video-call' />
-        <NavbarLink link='/posts' title='Posts' iconifyData='jam:blogger-square' />
-        <NavbarLink link='/anals' title='Analytics' iconifyData='jam:blogger-square' />
-        <NavbarLink link='/srats' title='Strategy' iconifyData='jam:blogger-square' />
 
         <Divider className='my-3 border-gray-200 dark:border-[#373A40]' />
 

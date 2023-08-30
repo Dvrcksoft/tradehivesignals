@@ -1,6 +1,7 @@
 import { collection, doc, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { create } from 'zustand';
 import { AnnouncementModel } from '../models/model.announcement';
+import { PinModel } from '../models/model.pin';
 import { AuthUserModel } from '../models/model.authuser';
 import { NotificationModel } from '../models/model.notification';
 import { PostModel } from '../models/model.post';
@@ -37,6 +38,7 @@ type State = {
   signalsStocksClosed: SignalModel[];
 
   announcements: AnnouncementModel[];
+  pins: PinModel[];
   notifications: NotificationModel[];
   authUsers: AuthUserModel[];
   posts: PostModel[];
@@ -60,6 +62,7 @@ type State = {
   streamSignalsStocksClosed: () => void;
 
   streamAnnouncements: () => void;
+  streamPins: () => void;
   streamNotifications: () => void;
   streamAuthUsers: () => void;
   streamPostsSubscription: () => void;
@@ -110,6 +113,7 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
   signalsStocksClosed: [],
 
   announcements: [],
+  pins: [],
   notifications: [],
   authUsers: [],
   posts: [],
@@ -283,6 +287,23 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
 
     set((state) => {
       return { ...state, subscriptions: { ...state.subscriptions, announcements: unsubscribe } };
+    });
+  },
+
+  streamPins: () => {
+    const q = query(collection(firestoreClient, 'pins'), orderBy('timestampCreated', 'desc'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const x = querySnapshot.docs.map((doc) => {
+        return PinModel.fromJson({ ...doc.data(), id: doc.id });
+      });
+
+      set((state) => {
+        return { ...state, pins: x };
+      });
+    });
+
+    set((state) => {
+      return { ...state, subscriptions: { ...state.subscriptions, pins: unsubscribe } };
     });
   },
 
@@ -466,6 +487,7 @@ export const useFirestoreStoreAdmin = create<State>((set, get) => ({
           get().streamSignalsStocksClosed();
 
           get().streamAnnouncements();
+          get().streamPins();
           get().streamNotifications();
           get().streamAuthUsers();
           get().streamPostsSubscription();

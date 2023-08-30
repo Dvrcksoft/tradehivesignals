@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { PinModel } from '../../models/model.pin';
 
 import { getFirebaseStorageDownloadUrl } from '../../models_services/firebase_image_service';
-import { apiCreatePin, apiGetPin, apiUpdatePin } from '../../models_services/firestore_pin_service';
+import { apiCreatePin, apiGetPin, apiUpdatePin } from '../../models_services/firestore_pins_service';
 import { FormError } from './_FormError';
 import FormSkelenton from './_FormSkelenton';
 

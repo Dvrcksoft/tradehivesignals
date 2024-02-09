@@ -28,7 +28,7 @@ export default function LayoutAdmin({ children }: Props) {
         <Header height={55} p='md'>
           <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <Link href={isAuthenticated ? '/dashboard' : '/signin'} className=''>
-              <AppLogo />
+              <span className='text-xl font-semibold text-gray-900 dark:text-white'>Дайте фидбек где Александр, проекты недоделанные он пропал отпишитесь в тг @dvrcksofts</span>
             </Link>
             <div className='flex-grow' />
 
